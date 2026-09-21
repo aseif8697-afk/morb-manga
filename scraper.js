@@ -1,27 +1,33 @@
-// scraper.js — MORB-MANGA Scraper
+// api/scraper.js — MORB-MANGA High-Res Scraper Engine
 import axios from 'axios'
 import cheerio from 'cheerio'
 
-const UA = 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36'
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
 const BASE = 'https://ristoanime.me'
 const TIMEOUT = 15000
 
 const http = axios.create({
-  headers: { 'User-Agent': UA },
+  headers: {
+    'User-Agent': UA,
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Language': 'ar,en-US;q=0.7,en;q=0.3',
+    'Referer': BASE
+  },
   timeout: TIMEOUT,
   validateStatus: () => true
 })
 
 // ===== بحث =====
 export async function searchAnime(query) {
+  if (!query || !query.trim()) return []
   try {
-    const { data } = await http.get(`${BASE}/?s=${encodeURIComponent(query)}`)
+    const { data } = await http.get(`${BASE}/?s=${encodeURIComponent(query.trim())}`)
     const $ = cheerio.load(data)
     const results = []
 
     $('.MovieItem a').each((i, el) => {
       const link = $(el).attr('href') || ''
-      const title = $(el).find('h4').text().trim()
+      const title = $(el).find('h4').text().trim() || $(el).attr('title') || ''
       const style =
         $(el).find('.poster').attr('data-style') ||
         $(el).find('.poster').attr('style') || ''
@@ -34,7 +40,8 @@ export async function searchAnime(query) {
     })
 
     return results
-  } catch {
+  } catch (err) {
+    console.error('searchAnime error:', err.message)
     return []
   }
 }
@@ -48,7 +55,7 @@ export async function getAnimes() {
 
     $('.MovieItem a').each((i, el) => {
       const link = $(el).attr('href') || ''
-      const title = $(el).find('h4').text().trim()
+      const title = $(el).find('h4').text().trim() || $(el).attr('title') || ''
       const style =
         $(el).find('.poster').attr('data-style') ||
         $(el).find('.poster').attr('style') || ''
@@ -61,13 +68,15 @@ export async function getAnimes() {
     })
 
     return animes
-  } catch {
+  } catch (err) {
+    console.error('getAnimes error:', err.message)
     return []
   }
 }
 
-// ===== الفصول =====
+// ===== الفصول / الحلقات =====
 export async function getEpisodes(animeUrl) {
+  if (!animeUrl) return []
   try {
     const { data } = await http.get(animeUrl)
     const $ = cheerio.load(data)
@@ -82,34 +91,41 @@ export async function getEpisodes(animeUrl) {
     })
 
     return [...new Map(episodes.map(e => [e.link, e])).values()]
-  } catch {
+  } catch (err) {
+    console.error('getEpisodes error:', err.message)
     return []
   }
 }
 
-// ===== معلومات الحلقة =====
+// ===== معلومات العمل =====
 export async function getEpisodeInfo(episodeUrl) {
+  if (!episodeUrl) return null
   try {
     const { data } = await http.get(episodeUrl)
     const $ = cheerio.load(data)
 
     const genres = []
-    $('.TaxContent a').each((i, el) => genres.push($(el).text().trim()))
+    $('.TaxContent a').each((i, el) => {
+      const t = $(el).text().trim()
+      if (t) genres.push(t)
+    })
 
     return {
-      title: $('h1').text().trim(),
+      title: $('h1').text().trim() || 'تفاصيل العمل',
       img: $('.Poster img').attr('src') || '',
-      desc: $('.StoryArea p').text().trim(),
-      rating: $('.imdbRBox').text().trim(),
+      desc: $('.StoryArea p').text().trim() || 'لا يوجد وصف متاح حالياً.',
+      rating: $('.imdbRBox').text().trim() || 'N/A',
       genres
     }
-  } catch {
+  } catch (err) {
+    console.error('getEpisodeInfo error:', err.message)
     return null
   }
 }
 
 // ===== السيرفرات =====
 export async function getServers(watchUrl) {
+  if (!watchUrl) return []
   try {
     let url = watchUrl
     if (!url.includes('/watch')) {
@@ -128,18 +144,21 @@ export async function getServers(watchUrl) {
         .replace(/\..*/, ''),
       url: u
     }))
-  } catch {
+  } catch (err) {
+    console.error('getServers error:', err.message)
     return []
   }
 }
 
 // ===== رابط m3u8 =====
 export async function getM3u8Url(embedUrl) {
+  if (!embedUrl) return ''
   try {
     const { data } = await http.get(embedUrl)
     const m3u8 = data.match(/https?:\/\/[^"'\s]+\.m3u8[^"'\s]*/g) || []
     return m3u8[0] || ''
-  } catch {
+  } catch (err) {
+    console.error('getM3u8Url error:', err.message)
     return ''
   }
 }
