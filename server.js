@@ -5,13 +5,8 @@ import app from './api/index.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// Serve static frontend from public directory
+// Serve static frontend
 app.use(express.static(path.join(__dirname, 'public')))
-
-// Root fallback to index.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'))
-})
 
 export default app
 
