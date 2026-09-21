@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MORB-MANGA — عالم المانجا</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink: #ff2e88;
+    --purple: #7b2ff7;
+    --cyan: #00e5ff;
+    --dark: #07070f;
+    --card: rgba(18, 12, 32, 0.75);
+  }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    background: var(--dark);
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(123, 47, 247, 0.45), transparent 45%),
+      radial-gradient(circle at 85% 85%, rgba(255, 46, 136, 0.4), transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.12), transparent 60%),
+      linear-gradient(135deg, #07070f 0%, #150a28 50%, #0a0616 100%);
+    background-size: 200% 200%;
+    animation: bgMove 18s ease infinite;
+  }
+  @keyframes bgMove {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .manga-grid {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,46,136,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(123,47,247,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  }
+
+  .particles {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--cyan);
+    animation: float linear infinite;
+  }
+  @keyframes float {
+    from { transform: translateY(105vh) scale(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    to   { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    background: rgba(7, 7, 15, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 46, 136, 0.25);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, var(--pink), var(--purple), var(--cyan), var(--pink));
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shine 4s linear infinite;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo::before {
+    content: '✧';
+    color: var(--pink);
+    -webkit-text-fill-color: var(--pink);
+    font-size: 22px;
+  }
+  @keyframes shine {
+    0% { background-position: 0%; }
+    100% { background-position: 300%; }
+  }
+
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+
+  button, .btn {
+    font-family: inherit;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: #fff;
+    box-shadow: 0 5px 20px rgba(255, 46, 136, 0.35);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(255, 46, 136, 0.7);
+  }
+  .btn-ghost {
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.14); }
+
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 45px 30px;
+  }
+
+  .hero { text-align: center; margin-bottom: 55px; }
+  .hero h1 {
+    font-size: 58px;
+    font-weight: 900;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg, #fff, var(--pink), var(--cyan), #fff);
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shine 5s linear infinite;
+  }
+  .hero p {
+    color: rgba(255,255,255,0.55);
+    font-size: 17px;
+    margin-bottom: 35px;
+  }
+
+  .search-box {
+    display: flex;
+    max-width: 680px;
+    margin: 0 auto;
+    background: rgba(18, 12, 32, 0.9);
+    border: 2px solid rgba(255, 46, 136, 0.35);
+    border-radius: 50px;
+    padding: 6px;
+    box-shadow: 0 0 40px rgba(123, 47, 247, 0.25);
+    transition: all 0.3s;
+  }
+  .search-box:focus-within {
+    border-color: var(--pink);
+    box-shadow: 0 0 60px rgba(255, 46, 136, 0.55);
+  }
+  .search-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    padding: 14px 24px;
+    font-size: 16px;
+    font-family: inherit;
+  }
+  .search-box input::placeholder { color: rgba(255,255,255,0.35); }
+  .search-box button {
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: #fff;
+    border-radius: 40px;
+    padding: 12px 32px;
+  }
+
+  .section-title {
+    font-size: 24px;
+    font-weight: 900;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::before {
+    content: '';
+    width: 6px;
+    height: 30px;
+    background: linear-gradient(var(--pink), var(--purple));
+    border-radius: 10px;
+    box-shadow: 0 0 15px var(--pink);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 22px;
+  }
+
+  .card {
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+  }
+  .card:hover {
+    transform: translateY(-8px) scale(1.03);
+    border-color: var(--pink);
+    box-shadow: 0 20px 45px rgba(255, 46, 136, 0.45);
+  }
+  .card img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s;
+  }
+  .card:hover img { transform: scale(1.1); }
+  .card .info {
+    padding: 16px 12px 12px;
+    background: linear-gradient(to top, rgba(7,7,15,0.98) 40%, transparent);
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+  }
+  .card .info h3 {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ===== زرار المفضلة على الكارت ===== */
+  .fav-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(7, 7, 15, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 46, 136, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 5;
+    padding: 0;
+    color: #fff;
+  }
+  .fav-btn:hover {
+    transform: scale(1.15);
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    border-color: transparent;
+    box-shadow: 0 0 20px rgba(255, 46, 136, 0.7);
+  }
+  .fav-btn.active {
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    border-color: transparent;
+    box-shadow: 0 0 15px rgba(255, 46, 136, 0.8);
+  }
+
+  #player {
+    margin-bottom: 40px;
+    background: var(--card);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(255, 46, 136, 0.3);
+    display: none;
+  }
+  #player.active { display: block; }
+  #player h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: var(--pink);
+  }
+  #player video, #player iframe {
+    width: 100%;
+    height: 550px;
+    border-radius: 12px;
+    background: #000;
+    border: none;
+  }
+
+  .ep-btn {
+    background: rgba(255,255,255,0.06);
+    padding: 14px 10px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .ep-btn:hover {
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    border-color: transparent;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255,46,136,0.4);
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255,255,255,0.35);
+    font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    margin-top: 60px;
+  }
+  footer span {
+    background: linear-gradient(90deg, var(--pink), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+  }
+
+  @media (max-width: 768px) {
+    header { padding: 12px 16px; }
+    .logo { font-size: 18px; }
+    .hero h1 { font-size: 32px; }
+    .hero p { font-size: 14px; }
+    main { padding: 25px 15px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+    .card img { height: 200px; }
+    #player video, #player iframe { height: 300px; }
+    .search-box input { padding: 12px 16px; font-size: 14px; }
+    .search-box button { padding: 10px 20px; }
+    .btn { padding: 8px 16px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="manga-grid"></div>
+<div class="particles" id="particles"></div>
+
+<header>
+  <div class="logo">MORB-MANGA</div>
+  <div class="header-actions">
+    <button class="btn btn-ghost" onclick="home()">🏠 الرئيسية</button>
+    <button class="btn btn-primary" onclick="showFavorites()">⭐ المفضلة (<span id="favCount">0</span>)</button>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>📖 MORB-MANGA</h1>
+    <p>عالمك الخاص لقراءة المانجا — ابحث، اقرأ، واستمتع</p>
+
+    <div class="search-box">
+      <input id="q" placeholder="ابحث عن مانجا..." onkeydown="if(event.key==='Enter')search()">
+      <button onclick="search()">🔍 ابحث</button>
+    </div>
+  </div>
+
+  <div id="player"></div>
+
+  <div class="section-title" id="sectionTitle">أحدث الإضافات</div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  صنع بـ ❤️ — <span>MORB-MANGA</span> © 2026
+</footer>
+
+<script>
+  // ===== جزيئات متحركة =====
+  const particlesBox = document.getElementById('particles')
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div')
+    p.className = 'particle'
+    p.style.left = Math.random() * 100 + '%'
+    p.style.animationDuration = (8 + Math.random() * 12) + 's'
+    p.style.animationDelay = Math.random() * 10 + 's'
+    p.style.background = ['#00e5ff', '#ff2e88', '#7b2ff7'][Math.floor(Math.random() * 3)]
+    p.style.boxShadow = `0 0 12px ${p.style.background}`
+    particlesBox.appendChild(p)
+  }
+
+  // ===== المفضلة (localStorage) =====
+  const FAV_KEY = 'morb_favorites'
+
+  function getFavorites() {
+    try {
+      return JSON.parse(localStorage.getItem(FAV_KEY) || '[]')
+    } catch {
+      return []
+    }
+  }
+
+  function saveFavorites(favs) {
+    localStorage.setItem(FAV_KEY, JSON.stringify(favs))
+    updateFavCount()
+  }
+
+  function isFavorite(link) {
+    return getFavorites().some(f => f.link === link)
+  }
+
+  function toggleFavorite(link, title, thumb, btn) {
+    let favs = getFavorites()
+    const exists = favs.find(f => f.link === link)
+
+    if (exists) {
+      favs = favs.filter(f => f.link !== link)
+      btn.classList.remove('active')
+      btn.textContent = '🤍'
+    } else {
+      favs.push({ link, title, thumb, addedAt: Date.now() })
+      btn.classList.add('active')
+      btn.textContent = '❤️'
+    }
+
+    saveFavorites(favs)
+  }
+
+  function updateFavCount() {
+    const count = getFavorites().length
+    const el = document.getElementById('favCount')
+    if (el) el.textContent = count
+  }
+
+  async function showFavorites() {
+    const favs = getFavorites()
+    document.getElementById('sectionTitle').textContent = '⭐ المفضلة'
+    document.getElementById('player').classList.remove('active')
+
+    if (!favs.length) {
+      document.getElementById('grid').innerHTML =
+        '<p style="opacity:.5">مفيش حاجة في المفضلة لسه 💔</p>'
+      return
+    }
+
+    render(favs)
+  }
+
+  // ===== الرئيسية =====
+  async function home() {
+    document.getElementById('sectionTitle').textContent = 'أحدث الإضافات'
+    document.getElementById('player').classList.remove('active')
+    const data = await (await fetch('/api/home')).json()
+    render(data)
+  }
+
+  // ===== البحث =====
+  async function search() {
+    const q = document.getElementById('q').value.trim()
+    if (!q) return home()
+    document.getElementById('sectionTitle').textContent = `نتائج البحث: ${q}`
+    document.getElementById('player').classList.remove('active')
+    const data = await (await fetch('/api/search?q=' + encodeURIComponent(q))).json()
+    render(data)
+  }
+
+  // ===== عرض الشبكة =====
+  function render(items) {
+    const grid = document.getElementById('grid')
+    if (!items.length) {
+      grid.innerHTML = '<p style="opacity:.5">لا توجد نتائج 😔</p>'
+      return
+    }
+    grid.innerHTML = items.map(a => {
+      const isFav = isFavorite(a.link)
+      const safeTitle = (a.title || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')
+      const safeThumb = (a.thumb || '').replace(/'/g, "\\'")
+      return `
+      <div class="card">
+        <button class="fav-btn ${isFav ? 'active' : ''}"
+                onclick="event.stopPropagation(); toggleFavorite('${a.link}', '${safeTitle}', '${safeThumb}', this)">
+          ${isFav ? '❤️' : '🤍'}
+        </button>
+        <div onclick="openAnime('${a.link}')">
+          <img src="${a.thumb || 'https://via.placeholder.com/300x400/1a0b2e/ff2e88?text=MORB'}"
+               alt="${a.title}" loading="lazy"
+               onerror="this.src='https://via.placeholder.com/300x400/1a0b2e/ff2e88?text=MORB'">
+          <div class="info"><h3>${a.title}</h3></div>
+        </div>
+      </div>
+    `}).join('')
+  }
+
+  // ===== فتح مانجا =====
+  async function openAnime(url) {
+    document.getElementById('sectionTitle').textContent = '⏳ جاري التحميل...'
+    document.getElementById('player').classList.remove('active')
+    const eps = await (await fetch('/api/episodes?url=' + encodeURIComponent(url))).json()
+    document.getElementById('sectionTitle').textContent = '📺 الفصول'
+    const grid = document.getElementById('grid')
+    if (!eps.length) {
+      grid.innerHTML = '<p style="opacity:.5">مفيش فصول متاحة 😔</p>'
+      return
+    }
+    grid.innerHTML = eps.map(e => `
+      <div class="ep-btn" onclick="playEpisode('${e.link}')">${e.title}</div>
+    `).join('')
+  }
+
+  // ===== تشغيل =====
+  async function playEpisode(url) {
+    const info = await (await fetch('/api/info?url=' + encodeURIComponent(url))).json()
+    const servers = await (await fetch('/api/servers?url=' + encodeURIComponent(url))).json()
+    if (!servers.length) return alert('مفيش سيرفرات متاحة')
+
+    const s = servers[0]
+    const stream = await (await fetch('/api/stream?embed=' + encodeURIComponent(s.url))).json()
+    if (stream.error) return alert(stream.error)
+
+    const player = document.getElementById('player')
+    player.classList.add('active')
+    player.innerHTML = `
+      <h2>${info?.title || 'مشاهدة'}</h2>
+      <video controls autoplay src="${stream.url}"></video>
+    `
+    player.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  // ===== تشغيل أولي =====
+  updateFavCount()
+  home()
+</script>
+
+</body>
+</html>
