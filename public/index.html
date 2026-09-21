@@ -3,17 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MORB-MANGA — عالم المانجا</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<title>MORB-MANGA — عالم المانجا والأنمي الاحترافي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<!-- مكتبة تشغيل البث المباشر HLS للأجهزة والمتصفحات المختلفة -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  input, textarea {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
 
   :root {
     --pink: #ff2e88;
     --purple: #7b2ff7;
     --cyan: #00e5ff;
-    --dark: #07070f;
-    --card: rgba(18, 12, 32, 0.75);
+    --dark: #070712;
+    --card-bg: rgba(18, 12, 34, 0.82);
+    --border-glow: rgba(255, 46, 136, 0.3);
   }
 
   body {
@@ -25,15 +46,16 @@
     position: relative;
   }
 
+  /* Animated Glowing Background */
   .bg-layer {
     position: fixed;
     inset: 0;
     z-index: -3;
     background:
-      radial-gradient(circle at 15% 15%, rgba(123, 47, 247, 0.45), transparent 45%),
-      radial-gradient(circle at 85% 85%, rgba(255, 46, 136, 0.4), transparent 45%),
-      radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.12), transparent 60%),
-      linear-gradient(135deg, #07070f 0%, #150a28 50%, #0a0616 100%);
+      radial-gradient(circle at 10% 15%, rgba(123, 47, 247, 0.35), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(255, 46, 136, 0.35), transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.1), transparent 55%),
+      linear-gradient(135deg, #070712 0%, #110826 50%, #080417 100%);
     background-size: 200% 200%;
     animation: bgMove 18s ease infinite;
   }
@@ -42,17 +64,17 @@
     50% { background-position: 100% 50%; }
   }
 
-  .manga-grid {
+  .grid-pattern {
     position: fixed;
     inset: 0;
     z-index: -2;
     pointer-events: none;
     background-image:
-      linear-gradient(rgba(255,46,136,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(123,47,247,0.05) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
-    -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+      linear-gradient(rgba(255,46,136,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(123,47,247,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(circle at center, black 35%, transparent 85%);
+    -webkit-mask-image: radial-gradient(circle at center, black 35%, transparent 85%);
   }
 
   .particles {
@@ -66,16 +88,14 @@
     position: absolute;
     width: 3px;
     height: 3px;
-    background: var(--cyan);
     border-radius: 50%;
-    box-shadow: 0 0 12px var(--cyan);
     animation: float linear infinite;
   }
   @keyframes float {
     from { transform: translateY(105vh) scale(0); opacity: 0; }
-    10% { opacity: 0.8; }
-    90% { opacity: 0.8; }
-    to   { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+    15% { opacity: 0.85; }
+    85% { opacity: 0.85; }
+    to { transform: translateY(-10vh) scale(1.3); opacity: 0; }
   }
 
   header {
@@ -83,10 +103,10 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 40px;
-    background: rgba(7, 7, 15, 0.75);
+    background: rgba(7, 7, 18, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 46, 136, 0.25);
+    border-bottom: 1px solid var(--border-glow);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -95,29 +115,27 @@
   .logo {
     font-size: 26px;
     font-weight: 900;
-    letter-spacing: 1px;
     background: linear-gradient(90deg, var(--pink), var(--purple), var(--cyan), var(--pink));
     background-size: 300%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shine 4s linear infinite;
+    cursor: pointer;
+    animation: shine 5s linear infinite;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
-  .logo::before {
-    content: '✧';
+  .logo span {
+    font-size: 20px;
     color: var(--pink);
     -webkit-text-fill-color: var(--pink);
-    font-size: 22px;
   }
   @keyframes shine {
     0% { background-position: 0%; }
     100% { background-position: 300%; }
   }
 
-  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .header-actions { display: flex; gap: 12px; align-items: center; }
 
   button, .btn {
     font-family: inherit;
@@ -126,9 +144,8 @@
     border-radius: 30px;
     border: none;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 14px;
-    text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -137,57 +154,59 @@
   .btn-primary {
     background: linear-gradient(135deg, var(--pink), var(--purple));
     color: #fff;
-    box-shadow: 0 5px 20px rgba(255, 46, 136, 0.35);
+    box-shadow: 0 4px 18px rgba(255, 46, 136, 0.4);
   }
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(255, 46, 136, 0.7);
+    box-shadow: 0 8px 25px rgba(255, 46, 136, 0.65);
   }
   .btn-ghost {
     background: rgba(255,255,255,0.06);
     color: #fff;
-    border: 1px solid rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.12);
   }
-  .btn-ghost:hover { background: rgba(255,255,255,0.14); }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+  }
 
   main {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 45px 30px;
+    padding: 40px 25px;
   }
 
-  .hero { text-align: center; margin-bottom: 55px; }
+  .hero { text-align: center; margin-bottom: 50px; }
   .hero h1 {
-    font-size: 58px;
+    font-size: 52px;
     font-weight: 900;
     margin-bottom: 12px;
     background: linear-gradient(90deg, #fff, var(--pink), var(--cyan), #fff);
     background-size: 300%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shine 5s linear infinite;
+    animation: shine 6s linear infinite;
   }
   .hero p {
-    color: rgba(255,255,255,0.55);
+    color: rgba(255,255,255,0.6);
     font-size: 17px;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
   }
 
   .search-box {
     display: flex;
     max-width: 680px;
     margin: 0 auto;
-    background: rgba(18, 12, 32, 0.9);
-    border: 2px solid rgba(255, 46, 136, 0.35);
+    background: rgba(18, 12, 34, 0.95);
+    border: 2px solid var(--border-glow);
     border-radius: 50px;
     padding: 6px;
-    box-shadow: 0 0 40px rgba(123, 47, 247, 0.25);
+    box-shadow: 0 0 35px rgba(123, 47, 247, 0.25);
     transition: all 0.3s;
   }
   .search-box:focus-within {
     border-color: var(--pink);
-    box-shadow: 0 0 60px rgba(255, 46, 136, 0.55);
+    box-shadow: 0 0 50px rgba(255, 46, 136, 0.5);
   }
   .search-box input {
     flex: 1;
@@ -195,7 +214,7 @@
     border: none;
     outline: none;
     color: #fff;
-    padding: 14px 24px;
+    padding: 12px 22px;
     font-size: 16px;
     font-family: inherit;
   }
@@ -204,13 +223,18 @@
     background: linear-gradient(135deg, var(--pink), var(--purple));
     color: #fff;
     border-radius: 40px;
-    padding: 12px 32px;
+    padding: 12px 28px;
   }
 
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+  }
   .section-title {
     font-size: 24px;
     font-weight: 900;
-    margin-bottom: 25px;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -218,7 +242,7 @@
   .section-title::before {
     content: '';
     width: 6px;
-    height: 30px;
+    height: 28px;
     background: linear-gradient(var(--pink), var(--purple));
     border-radius: 10px;
     box-shadow: 0 0 15px var(--pink);
@@ -226,37 +250,38 @@
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
     gap: 22px;
   }
 
   .card {
-    background: var(--card);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(255,255,255,0.08);
     position: relative;
   }
   .card:hover {
-    transform: translateY(-8px) scale(1.03);
+    transform: translateY(-8px) scale(1.02);
     border-color: var(--pink);
-    box-shadow: 0 20px 45px rgba(255, 46, 136, 0.45);
+    box-shadow: 0 15px 35px rgba(255, 46, 136, 0.4);
   }
   .card img {
     width: 100%;
     height: 260px;
     object-fit: cover;
     display: block;
+    pointer-events: none;
     transition: transform 0.5s;
   }
-  .card:hover img { transform: scale(1.1); }
+  .card:hover img { transform: scale(1.08); }
   .card .info {
     padding: 16px 12px 12px;
-    background: linear-gradient(to top, rgba(7,7,15,0.98) 40%, transparent);
+    background: linear-gradient(to top, rgba(7,7,18,0.98) 45%, transparent);
     position: absolute;
     bottom: 0; left: 0; right: 0;
   }
@@ -270,33 +295,30 @@
     overflow: hidden;
   }
 
-  /* ===== زرار المفضلة على الكارت ===== */
   .fav-btn {
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: rgba(7, 7, 15, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(7, 7, 18, 0.85);
+    backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 46, 136, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.25s;
     z-index: 5;
     padding: 0;
     color: #fff;
   }
   .fav-btn:hover {
     transform: scale(1.15);
-    background: linear-gradient(135deg, var(--pink), var(--purple));
-    border-color: transparent;
-    box-shadow: 0 0 20px rgba(255, 46, 136, 0.7);
+    background: var(--pink);
+    box-shadow: 0 0 15px var(--pink);
   }
   .fav-btn.active {
     background: linear-gradient(135deg, var(--pink), var(--purple));
@@ -304,53 +326,156 @@
     box-shadow: 0 0 15px rgba(255, 46, 136, 0.8);
   }
 
+  /* Player & Stream Area */
   #player {
     margin-bottom: 40px;
-    background: var(--card);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: 20px;
-    padding: 25px;
-    border: 1px solid rgba(255, 46, 136, 0.3);
+    padding: 24px;
+    border: 1px solid var(--border-glow);
     display: none;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
   }
   #player.active { display: block; }
-  #player h2 {
-    font-size: 22px;
-    margin-bottom: 15px;
-    color: var(--pink);
+  .player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .player-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--cyan);
+  }
+  .servers-list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .server-tab {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .server-tab.active, .server-tab:hover {
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    border-color: transparent;
   }
   #player video, #player iframe {
     width: 100%;
-    height: 550px;
-    border-radius: 12px;
+    height: 540px;
+    border-radius: 14px;
     background: #000;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.1);
   }
 
+  /* Episodes List */
+  .episodes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
   .ep-btn {
     background: rgba(255,255,255,0.06);
-    padding: 14px 10px;
+    padding: 12px 8px;
     border-radius: 12px;
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 700;
     border: 1px solid rgba(255,255,255,0.1);
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.25s;
   }
   .ep-btn:hover {
     background: linear-gradient(135deg, var(--pink), var(--purple));
     border-color: transparent;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(255,46,136,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255,46,136,0.4);
   }
+
+  /* Info Header */
+  .work-info-box {
+    display: flex;
+    gap: 25px;
+    background: rgba(255,255,255,0.03);
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 25px;
+  }
+  .work-info-box img {
+    width: 140px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .work-details { flex: 1; }
+  .work-details h2 { font-size: 22px; color: var(--pink); margin-bottom: 10px; }
+  .work-details p { color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
+  .genres-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .genre-tag {
+    background: rgba(0, 229, 255, 0.15);
+    color: var(--cyan);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+
+  /* Toast Notification */
+  .toast {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(18, 12, 34, 0.95);
+    border: 1px solid var(--pink);
+    color: #fff;
+    padding: 12px 26px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 10px 30px rgba(255, 46, 136, 0.5);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* Loading State */
+  .spinner {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    border-top-color: var(--pink);
+    animation: spin 0.8s ease-in-out infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   footer {
     text-align: center;
-    padding: 40px 20px;
-    color: rgba(255,255,255,0.35);
+    padding: 35px 20px;
+    color: rgba(255,255,255,0.4);
     font-size: 13px;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid rgba(255,255,255,0.06);
     margin-top: 60px;
   }
   footer span {
@@ -361,28 +486,26 @@
   }
 
   @media (max-width: 768px) {
-    header { padding: 12px 16px; }
-    .logo { font-size: 18px; }
+    header { padding: 12px 18px; }
+    .logo { font-size: 20px; }
     .hero h1 { font-size: 32px; }
     .hero p { font-size: 14px; }
     main { padding: 25px 15px; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
     .card img { height: 200px; }
-    #player video, #player iframe { height: 300px; }
-    .search-box input { padding: 12px 16px; font-size: 14px; }
-    .search-box button { padding: 10px 20px; }
-    .btn { padding: 8px 16px; font-size: 12px; }
+    #player video, #player iframe { height: 280px; }
+    .work-info-box { flex-direction: column; align-items: center; text-align: center; }
   }
 </style>
 </head>
-<body>
+<body oncontextmenu="return false;" ondragstart="return false;">
 
 <div class="bg-layer"></div>
-<div class="manga-grid"></div>
+<div class="grid-pattern"></div>
 <div class="particles" id="particles"></div>
 
 <header>
-  <div class="logo">MORB-MANGA</div>
+  <div class="logo" onclick="home()"><span>✦</span> MORB-MANGA</div>
   <div class="header-actions">
     <button class="btn btn-ghost" onclick="home()">🏠 الرئيسية</button>
     <button class="btn btn-primary" onclick="showFavorites()">⭐ المفضلة (<span id="favCount">0</span>)</button>
@@ -391,41 +514,81 @@
 
 <main>
   <div class="hero">
-    <h1>📖 MORB-MANGA</h1>
-    <p>عالمك الخاص لقراءة المانجا — ابحث، اقرأ، واستمتع</p>
+    <h1>✦ عالم المانجا والأنمي ✦</h1>
+    <p>منصة سريعة ومحمية لمشاهدة ومتابعة أحدث الإصدارات بجودة فائقة</p>
 
     <div class="search-box">
-      <input id="q" placeholder="ابحث عن مانجا..." onkeydown="if(event.key==='Enter')search()">
+      <input id="q" placeholder="ابحث باسم المانجا أو الأنمي..." onkeydown="if(event.key==='Enter')search()">
       <button onclick="search()">🔍 ابحث</button>
     </div>
   </div>
 
   <div id="player"></div>
 
-  <div class="section-title" id="sectionTitle">أحدث الإضافات</div>
+  <div class="section-header">
+    <div class="section-title" id="sectionTitle">أحدث الإصدارات</div>
+    <button id="backBtn" class="btn btn-ghost" style="display:none;" onclick="home()">↩ العودة</button>
+  </div>
+  
   <div class="grid" id="grid"></div>
 </main>
 
 <footer>
-  صنع بـ ❤️ — <span>MORB-MANGA</span> © 2026
+  جميع الحقوق محفوظة — منصة <span>MORB-MANGA</span> © 2026
 </footer>
 
+<div class="toast" id="toast"></div>
+
 <script>
-  // ===== جزيئات متحركة =====
+  // ===== نظام الحماية وحظر النسخ والسرقة =====
+  document.addEventListener('contextmenu', e => {
+    e.preventDefault()
+    showToast('⚠️ المحتوى محمي بحقوق الملكية الفكرية')
+  })
+
+  document.addEventListener('keydown', e => {
+    // منع أدوات المطورين وعرض السورس والتحميل
+    if (
+      e.key === 'F12' ||
+      (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+      (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's')) ||
+      (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'i'))
+    ) {
+      e.preventDefault()
+      showToast('⚠️ تم تعطيل اختصارات الفحص لحماية الملفات')
+      return false
+    }
+  })
+
+  // منع تشغيل الموقع داخل iFrame خارجي (Clickjacking Protection)
+  if (window.top !== window.self) {
+    window.top.location = window.self.location
+  }
+
+  console.log('%c MORB-MANGA PROTECTED %c', 'background: #ff2e88; color: #fff; font-size: 16px; font-weight: bold; padding: 4px 8px; border-radius: 4px;', '')
+
+  function showToast(msg) {
+    const t = document.getElementById('toast')
+    t.textContent = msg
+    t.classList.add('show')
+    setTimeout(() => t.classList.remove('show'), 2800)
+  }
+
+  // ===== الجزيئات المتحركة في الخلفية =====
   const particlesBox = document.getElementById('particles')
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 35; i++) {
     const p = document.createElement('div')
     p.className = 'particle'
     p.style.left = Math.random() * 100 + '%'
     p.style.animationDuration = (8 + Math.random() * 12) + 's'
-    p.style.animationDelay = Math.random() * 10 + 's'
+    p.style.animationDelay = Math.random() * 8 + 's'
     p.style.background = ['#00e5ff', '#ff2e88', '#7b2ff7'][Math.floor(Math.random() * 3)]
-    p.style.boxShadow = `0 0 12px ${p.style.background}`
+    p.style.boxShadow = `0 0 10px ${p.style.background}`
     particlesBox.appendChild(p)
   }
 
-  // ===== المفضلة (localStorage) =====
-  const FAV_KEY = 'morb_favorites'
+  // ===== نظام المفضلة =====
+  const FAV_KEY = 'morb_favorites_v2'
 
   function getFavorites() {
     try {
@@ -452,116 +615,247 @@
       favs = favs.filter(f => f.link !== link)
       btn.classList.remove('active')
       btn.textContent = '🤍'
+      showToast('تمت الإزالة من المفضلة')
     } else {
       favs.push({ link, title, thumb, addedAt: Date.now() })
       btn.classList.add('active')
       btn.textContent = '❤️'
+      showToast('تمت الإضافة إلى المفضلة ⭐')
     }
-
     saveFavorites(favs)
   }
 
   function updateFavCount() {
-    const count = getFavorites().length
     const el = document.getElementById('favCount')
-    if (el) el.textContent = count
+    if (el) el.textContent = getFavorites().length
   }
 
-  async function showFavorites() {
-    const favs = getFavorites()
-    document.getElementById('sectionTitle').textContent = '⭐ المفضلة'
+  function showFavorites() {
+    document.getElementById('backBtn').style.display = 'inline-flex'
+    document.getElementById('sectionTitle').textContent = '⭐ المفضلة الخاصة بك'
     document.getElementById('player').classList.remove('active')
-
+    const favs = getFavorites()
     if (!favs.length) {
-      document.getElementById('grid').innerHTML =
-        '<p style="opacity:.5">مفيش حاجة في المفضلة لسه 💔</p>'
+      document.getElementById('grid').innerHTML = '<p style="opacity:.6; text-align:center; grid-column: 1/-1; padding: 40px 0;">قائمتك المفضلة فارغة حالياً 💔</p>'
       return
     }
-
     render(favs)
   }
 
-  // ===== الرئيسية =====
+  // ===== عرض الرئيسية =====
   async function home() {
-    document.getElementById('sectionTitle').textContent = 'أحدث الإضافات'
+    document.getElementById('backBtn').style.display = 'none'
+    document.getElementById('sectionTitle').textContent = 'أحدث الإصدارات'
     document.getElementById('player').classList.remove('active')
-    const data = await (await fetch('/api/home')).json()
-    render(data)
+    const grid = document.getElementById('grid')
+    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><div class="spinner"></div><p style="margin-top:15px; opacity:.7;">جاري جلب أحدث الإصدارات...</p></div>'
+
+    try {
+      const res = await fetch('/api/home')
+      const data = await res.json()
+      render(data)
+    } catch (err) {
+      grid.innerHTML = '<p style="opacity:.6; grid-column: 1/-1; text-align:center;">تعذر الاتصال بالخادم، يرجى المحاولة لاحقاً ⚠️</p>'
+    }
   }
 
   // ===== البحث =====
   async function search() {
     const q = document.getElementById('q').value.trim()
     if (!q) return home()
-    document.getElementById('sectionTitle').textContent = `نتائج البحث: ${q}`
+
+    document.getElementById('backBtn').style.display = 'inline-flex'
+    document.getElementById('sectionTitle').textContent = `نتائج البحث عن: ${q}`
     document.getElementById('player').classList.remove('active')
-    const data = await (await fetch('/api/search?q=' + encodeURIComponent(q))).json()
-    render(data)
+    const grid = document.getElementById('grid')
+    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><div class="spinner"></div><p style="margin-top:15px; opacity:.7;">جاري البحث...</p></div>'
+
+    try {
+      const res = await fetch('/api/search?q=' + encodeURIComponent(q))
+      const data = await res.json()
+      render(data)
+    } catch (err) {
+      grid.innerHTML = '<p style="opacity:.6; grid-column: 1/-1; text-align:center;">حدث خطأ أثناء البحث ⚠️</p>'
+    }
   }
 
-  // ===== عرض الشبكة =====
+  // ===== بناء شبكة الكروت =====
   function render(items) {
     const grid = document.getElementById('grid')
-    if (!items.length) {
-      grid.innerHTML = '<p style="opacity:.5">لا توجد نتائج 😔</p>'
+    if (!items || !items.length) {
+      grid.innerHTML = '<p style="opacity:.6; grid-column: 1/-1; text-align:center; padding: 40px 0;">لا توجد عناصر متاحة للعرض حالياً 😔</p>'
       return
     }
+
     grid.innerHTML = items.map(a => {
       const isFav = isFavorite(a.link)
-      const safeTitle = (a.title || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')
-      const safeThumb = (a.thumb || '').replace(/'/g, "\\'")
+      const safeTitle = (a.title || '').replace(/'/g, "\'").replace(/"/g, '&quot;')
+      const safeThumb = (a.thumb || '').replace(/'/g, "\'")
       return `
       <div class="card">
         <button class="fav-btn ${isFav ? 'active' : ''}"
                 onclick="event.stopPropagation(); toggleFavorite('${a.link}', '${safeTitle}', '${safeThumb}', this)">
           ${isFav ? '❤️' : '🤍'}
         </button>
-        <div onclick="openAnime('${a.link}')">
-          <img src="${a.thumb || 'https://via.placeholder.com/300x400/1a0b2e/ff2e88?text=MORB'}"
+        <div onclick="openWork('${a.link}')">
+          <img src="${a.thumb || 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&auto=format&fit=crop&q=80'}"
                alt="${a.title}" loading="lazy"
-               onerror="this.src='https://via.placeholder.com/300x400/1a0b2e/ff2e88?text=MORB'">
+               onerror="this.src='https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&auto=format&fit=crop&q=80'">
           <div class="info"><h3>${a.title}</h3></div>
         </div>
       </div>
-    `}).join('')
+      `
+    }).join('')
   }
 
-  // ===== فتح مانجا =====
-  async function openAnime(url) {
-    document.getElementById('sectionTitle').textContent = '⏳ جاري التحميل...'
-    document.getElementById('player').classList.remove('active')
-    const eps = await (await fetch('/api/episodes?url=' + encodeURIComponent(url))).json()
-    document.getElementById('sectionTitle').textContent = '📺 الفصول'
+  // ===== فتح العمل وجلب الفصول / الحلقات والمعلومات =====
+  async function openWork(url) {
+    document.getElementById('backBtn').style.display = 'inline-flex'
+    document.getElementById('sectionTitle').textContent = '⏳ جاري تحميل تفاصيل العمل...'
     const grid = document.getElementById('grid')
-    if (!eps.length) {
-      grid.innerHTML = '<p style="opacity:.5">مفيش فصول متاحة 😔</p>'
-      return
+    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><div class="spinner"></div></div>'
+
+    try {
+      const [infoRes, epsRes] = await Promise.all([
+        fetch('/api/info?url=' + encodeURIComponent(url)).then(r => r.json()).catch(() => null),
+        fetch('/api/episodes?url=' + encodeURIComponent(url)).then(r => r.json()).catch(() => [])
+      ])
+
+      document.getElementById('sectionTitle').textContent = (infoRes && infoRes.title) || 'قائمة الفصول والحلقات'
+
+      let headerHtml = ''
+      if (infoRes && infoRes.title) {
+        headerHtml = `
+          <div class="work-info-box" style="grid-column: 1/-1;">
+            ${infoRes.img ? `<img src="${infoRes.img}" alt="${infoRes.title}" onerror="this.style.display='none'">` : ''}
+            <div class="work-details">
+              <h2>${infoRes.title}</h2>
+              <p>${infoRes.desc}</p>
+              ${infoRes.genres && infoRes.genres.length ? `
+                <div class="genres-tags">
+                  ${infoRes.genres.map(g => `<span class="genre-tag">${g}</span>`).join('')}
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `
+      }
+
+      if (!epsRes || !epsRes.length) {
+        grid.innerHTML = headerHtml + '<p style="opacity:.6; grid-column: 1/-1; text-align:center;">لم يتم العثور على فصول أو حلقات متاحة لهذا العمل 😔</p>'
+        return
+      }
+
+      const epsHtml = `
+        <div style="grid-column: 1/-1;">
+          <h3 style="margin-bottom: 12px; color: var(--cyan);">اختر الفصل / الحلقة للمشاهدة:</h3>
+          <div class="episodes-grid">
+            ${epsRes.map(e => `
+              <div class="ep-btn" onclick="loadEpisode('${e.link}', '${(e.title || '').replace(/'/g, "\'")}')">${e.title}</div>
+            `).join('')}
+          </div>
+        </div>
+      `
+      grid.innerHTML = headerHtml + epsHtml
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch (err) {
+      grid.innerHTML = '<p style="opacity:.6; grid-column: 1/-1; text-align:center;">تعذر تحميل الفصول حالياً ⚠️</p>'
     }
-    grid.innerHTML = eps.map(e => `
-      <div class="ep-btn" onclick="playEpisode('${e.link}')">${e.title}</div>
-    `).join('')
   }
 
-  // ===== تشغيل =====
-  async function playEpisode(url) {
-    const info = await (await fetch('/api/info?url=' + encodeURIComponent(url))).json()
-    const servers = await (await fetch('/api/servers?url=' + encodeURIComponent(url))).json()
-    if (!servers.length) return alert('مفيش سيرفرات متاحة')
+  // ===== تشغيل الحلقة / الفصل واختيار السيرفر مع دعم HLS =====
+  let currentHlsInstance = null
 
-    const s = servers[0]
-    const stream = await (await fetch('/api/stream?embed=' + encodeURIComponent(s.url))).json()
-    if (stream.error) return alert(stream.error)
-
+  async function loadEpisode(epUrl, epTitle) {
     const player = document.getElementById('player')
     player.classList.add('active')
     player.innerHTML = `
-      <h2>${info?.title || 'مشاهدة'}</h2>
-      <video controls autoplay src="${stream.url}"></video>
+      <div class="player-header">
+        <div class="player-title">⏳ جاري الاتصال بالسيرفرات: ${epTitle}</div>
+      </div>
+      <div style="text-align: center; padding: 40px;"><div class="spinner"></div></div>
     `
     player.scrollIntoView({ behavior: 'smooth' })
+
+    try {
+      const servers = await fetch('/api/servers?url=' + encodeURIComponent(epUrl)).then(r => r.json())
+      if (!servers || !servers.length) {
+        player.innerHTML = `
+          <div class="player-header">
+            <div class="player-title">${epTitle}</div>
+          </div>
+          <p style="opacity:.7; padding: 20px 0; text-align: center;">عذراً، لم تتوفر سيرفرات تشغيل لهذه الحلقة حالياً 😔</p>
+        `
+        return
+      }
+
+      renderPlayerWithServers(servers, 0, epTitle)
+    } catch (err) {
+      showToast('فشل في جلب السيرفرات')
+    }
   }
 
-  // ===== تشغيل أولي =====
+  async function renderPlayerWithServers(servers, activeIdx, epTitle) {
+    const player = document.getElementById('player')
+    const activeServer = servers[activeIdx]
+
+    player.innerHTML = `
+      <div class="player-header">
+        <div class="player-title">📺 ${epTitle}</div>
+      </div>
+      <div class="servers-list">
+        ${servers.map((s, idx) => `
+          <button class="server-tab ${idx === activeIdx ? 'active' : ''}"
+                  onclick="renderPlayerWithServers(${JSON.stringify(servers).replace(/"/g, '&quot;')}, ${idx}, '${epTitle.replace(/'/g, "\'")}')">
+            سيرفر: ${s.name || idx + 1}
+          </button>
+        `).join('')}
+      </div>
+      <div id="videoContainer" style="text-align: center; padding: 20px;">
+        <div class="spinner"></div>
+        <p style="margin-top:10px; font-size:13px; opacity:.7;">جاري تجهيز مشغل البث...</p>
+      </div>
+    `
+
+    const container = document.getElementById('videoContainer')
+
+    try {
+      // محاولة استخراج البث المباشر m3u8
+      const streamRes = await fetch('/api/stream?embed=' + encodeURIComponent(activeServer.url)).then(r => r.json())
+
+      if (streamRes && streamRes.url) {
+        // تشغيل البث المباشر بواسطة hls.js أو المشغل الأصلي
+        container.innerHTML = `<video id="videoPlayer" controls autoplay style="width:100%; height:540px; border-radius:14px; background:#000;"></video>`
+        const video = document.getElementById('videoPlayer')
+
+        if (currentHlsInstance) {
+          currentHlsInstance.destroy()
+          currentHlsInstance = null
+        }
+
+        if (Hls.isSupported()) {
+          const hls = new Hls()
+          currentHlsInstance = hls
+          hls.loadSource(streamRes.url)
+          hls.attachMedia(video)
+          hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}))
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = streamRes.url
+          video.play().catch(() => {})
+        } else {
+          // بديل iFrame
+          container.innerHTML = `<iframe src="${activeServer.url}" allowfullscreen allow="autoplay; fullscreen"></iframe>`
+        }
+      } else {
+        // بديل مشغل الـ embed المباشر
+        container.innerHTML = `<iframe src="${activeServer.url}" allowfullscreen allow="autoplay; fullscreen"></iframe>`
+      }
+    } catch {
+      container.innerHTML = `<iframe src="${activeServer.url}" allowfullscreen allow="autoplay; fullscreen"></iframe>`
+    }
+  }
+
+  // ===== تشغيل عند الفتح =====
   updateFavCount()
   home()
 </script>
