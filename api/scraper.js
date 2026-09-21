@@ -1,6 +1,6 @@
 // Scraper Engine for RistoAnime / Witanime
 import axios from 'axios'
-import cheerio from 'cheerio'
+import * as cheerio from 'cheerio'
 
 const UA = 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36'
 const BASE = 'https://ristoanime.me'
